@@ -26,7 +26,7 @@ while cam.isOpened():
         
         img = frame[start_y:end_y, start_x:end_x]
         
-    if len(bbox) == 1:
+    elif len(bbox) == 1:
         bbox = bbox[0]
         
         start_x,start_y,end_x,end_y = bbox
@@ -48,7 +48,38 @@ while cam.isOpened():
          
         img = frame[start_y:end_y,start_x:end_x]
     else:
-        img = frame
-#     cv2.imshow('i',frame)
+        x1_position = []
+        y1_position = []
+        
+        x2_position = []
+        y2_position = []
+        
+        for box in bbox:
+            start_x,start_y,end_x,end_y = box
+            
+            x1_position.append(start_x)
+            y1_position.append(start_y)
+            
+            x2_position.append(end_x)
+            y2_position.append(end_y)
+            
+        start_x, start_y = min(x1_position),min(y1_position)
+        end_x, end_y = max(x2_position),max(y2_position)
+        
+        start_x,start_y,end_x,end_y = start_x-border_x,start_y-border_y,end_x+border_x,end_y +border_y
+          
+        if start_x < 0:
+            start_x = 0
+        if start_y <0:
+            start_y = 0
+            
+        if end_x >= max_frame_width:
+            end_x = max_frame_width
+        if end_y >= max_frame_height:
+            end_y = max_frame_height
+         
+        img = frame[start_y:end_y,start_x:end_x]
+        
+
     cv2.imshow('t',img)
     cv2.waitKey(1)
